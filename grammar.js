@@ -45,14 +45,23 @@ export default grammar({
         ),
       ),
 
+    eval_bracket_short: ($) =>
+      seq(
+        $.eval_bracket_short_open,
+        optional($.eval_bracket_internal),
+        $.eval_bracket_short_close,
+      ),
+    eval_bracket_short_open: ($) => /\[/,
+    eval_bracket_short_close: ($) => /\]/,
+
     eval_bracket: ($) =>
       seq(
         $.eval_bracket_open,
         optional($.eval_bracket_internal),
         $.eval_bracket_close,
       ),
-    eval_bracket_open: ($) => choice(/\[---/, /\[--/, /\[-/, /\[/),
-    eval_bracket_close: ($) => choice(/---\]/, /--\]/, /-\]/, /\]/),
+    eval_bracket_open: ($) => choice(/\[---/, /\[--/, /\[-/),
+    eval_bracket_close: ($) => choice(/---\]/, /--\]/, /-\]/),
     eval_bracket_internal: ($) =>
       repeat1(
         choice(
