@@ -51,7 +51,7 @@ export default grammar({
     eval_bracket_short: ($) =>
       seq(
         $.eval_bracket_short_open,
-        optional($.eval_bracket_internal),
+        optional($.eval_bracket_short_internal),
         $.eval_bracket_short_close,
       ),
     eval_bracket_short_open: ($) => /\[/,

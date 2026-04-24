@@ -58,6 +58,14 @@
           "named": true
         },
         {
+          "type": "eval_bracket_short_close",
+          "named": true
+        },
+        {
+          "type": "eval_bracket_short_open",
+          "named": true
+        },
+        {
           "type": "raw_scope_close",
           "named": true
         },
@@ -76,6 +84,72 @@
     "type": "eval_bracket_open",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "eval_bracket_short",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "eval_bracket_short_close",
+          "named": true
+        },
+        {
+          "type": "eval_bracket_short_internal",
+          "named": true
+        },
+        {
+          "type": "eval_bracket_short_open",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "eval_bracket_short_internal",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "dash",
+          "named": true
+        },
+        {
+          "type": "escaped",
+          "named": true
+        },
+        {
+          "type": "eval_bracket_close",
+          "named": true
+        },
+        {
+          "type": "eval_bracket_open",
+          "named": true
+        },
+        {
+          "type": "raw_scope_close",
+          "named": true
+        },
+        {
+          "type": "raw_scope_open",
+          "named": true
+        },
+        {
+          "type": "scope",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "raw_scope",
@@ -134,6 +208,14 @@
           "named": true
         },
         {
+          "type": "eval_bracket_short_close",
+          "named": true
+        },
+        {
+          "type": "eval_bracket_short_open",
+          "named": true
+        },
+        {
           "type": "scope",
           "named": true
         }
@@ -167,6 +249,10 @@
         },
         {
           "type": "eval_bracket",
+          "named": true
+        },
+        {
+          "type": "eval_bracket_short",
           "named": true
         },
         {
@@ -206,6 +292,10 @@
           "named": true
         },
         {
+          "type": "eval_bracket_short",
+          "named": true
+        },
+        {
           "type": "raw_scope",
           "named": true
         },
@@ -222,6 +312,14 @@
   },
   {
     "type": "escaped",
+    "named": true
+  },
+  {
+    "type": "eval_bracket_short_close",
+    "named": true
+  },
+  {
+    "type": "eval_bracket_short_open",
     "named": true
   },
   {
