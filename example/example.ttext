@@ -15,3 +15,8 @@ longer code
 [---
 hello]
 ---]
+[-
+{[}{[}
+-]
+
+if x:

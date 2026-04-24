@@ -123,20 +123,46 @@
             "name": "_newline"
           },
           {
-            "type": "SYMBOL",
-            "name": "eval_bracket_open"
+            "type": "STRING",
+            "value": "["
           },
           {
-            "type": "SYMBOL",
-            "name": "eval_bracket_short_open"
+            "type": "STRING",
+            "value": "]"
           },
           {
-            "type": "SYMBOL",
-            "name": "eval_bracket_close"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "---\\]"
+              },
+              {
+                "type": "PATTERN",
+                "value": "--\\]"
+              },
+              {
+                "type": "PATTERN",
+                "value": "-\\]"
+              }
+            ]
           },
           {
-            "type": "SYMBOL",
-            "name": "eval_bracket_short_close"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "\\[---"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\[--"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\[-"
+              }
+            ]
           },
           {
             "type": "SYMBOL",
@@ -147,8 +173,12 @@
             "name": "dash"
           },
           {
-            "type": "SYMBOL",
-            "name": "scope"
+            "type": "STRING",
+            "value": "{"
+          },
+          {
+            "type": "STRING",
+            "value": "}"
           },
           {
             "type": "SYMBOL",
@@ -191,52 +221,8 @@
       "value": "\\]"
     },
     "eval_bracket_short_internal": {
-      "type": "REPEAT1",
-      "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "SYMBOL",
-            "name": "escaped"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "_newline"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "raw_scope_open"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "raw_scope_close"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "eval_bracket_open"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "eval_bracket_close"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "comment"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "dash"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "scope"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "_anything_else"
-          }
-        ]
-      }
+      "type": "PATTERN",
+      "value": "[^\\]]+"
     },
     "eval_bracket": {
       "type": "SEQ",
@@ -311,20 +297,46 @@
             "name": "_newline"
           },
           {
-            "type": "SYMBOL",
-            "name": "raw_scope_open"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "###\\{"
+              },
+              {
+                "type": "PATTERN",
+                "value": "##\\{"
+              },
+              {
+                "type": "PATTERN",
+                "value": "#\\{"
+              }
+            ]
           },
           {
-            "type": "SYMBOL",
-            "name": "raw_scope_close"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "\\}\\#\\#\\#"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\}\\#\\#"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\}\\#"
+              }
+            ]
           },
           {
-            "type": "SYMBOL",
-            "name": "eval_bracket_short_open"
+            "type": "STRING",
+            "value": "["
           },
           {
-            "type": "SYMBOL",
-            "name": "eval_bracket_short_close"
+            "type": "STRING",
+            "value": "]"
           },
           {
             "type": "SYMBOL",
@@ -335,8 +347,12 @@
             "name": "dash"
           },
           {
-            "type": "SYMBOL",
-            "name": "scope"
+            "type": "STRING",
+            "value": "{"
+          },
+          {
+            "type": "STRING",
+            "value": "}"
           },
           {
             "type": "SYMBOL",
