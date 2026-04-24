@@ -1,0 +1,13 @@
+big paragraph [with embedded]{ code }.
+
+# comment
+
+[-
+longer code
+-]#{
+    with a raw scope #
+}#
+
+\#{ }# this should be a comment not part of a raw
+\##{ }# this should be text
+\#\#{ }## this should be a comment again
