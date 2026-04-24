@@ -57,22 +57,7 @@ export default grammar({
       ),
     eval_bracket_short_open: ($) => /\[/,
     eval_bracket_short_close: ($) => /\]/,
-    eval_bracket_short_internal: ($) =>
-      repeat1(
-        choice(
-          $.escaped,
-          $._newline,
-          $.raw_scope_open,
-          $.raw_scope_close,
-          $.eval_bracket_open,
-          $.eval_bracket_close,
-          $.comment,
-          $.dash,
-          "{",
-          "}",
-          $._anything_else,
-        ),
-      ),
+    eval_bracket_short_internal: ($) => /[^\]]+/,
 
     eval_bracket: ($) =>
       seq(
