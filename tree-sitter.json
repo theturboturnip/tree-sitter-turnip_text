@@ -1,0 +1,41 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "turnip_text",
+      "camelcase": "TurnipText",
+      "title": "turnip_text",
+      "scope": "source.turnip_text",
+      "file-types": [
+        "ttext"
+      ],
+      "injection-regex": "^turnip_text$",
+      "class-name": "TreeSitterTurnipText"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "TurnipText grammar for tree-sitter",
+    "authors": [
+      {
+        "name": "Samuel W. Stark",
+        "url": "samuelwstark.com"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/theturboturnip/tree-sitter-turnip_text",
+      "funding": ""
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "java": true,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": true,
+    "zig": true
+  }
+}
