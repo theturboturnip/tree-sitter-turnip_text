@@ -21,6 +21,7 @@ export default grammar({
         $._newline,
         $.raw_scope,
         $.eval_bracket,
+        $.eval_bracket_short,
         $.comment,
         $.dash,
         $.scope,
@@ -37,7 +38,9 @@ export default grammar({
           $.escaped,
           $._newline,
           $.eval_bracket_open,
+          $.eval_bracket_short_open,
           $.eval_bracket_close,
+          $.eval_bracket_short_close,
           $.comment,
           $.dash,
           $.scope,
@@ -53,6 +56,21 @@ export default grammar({
       ),
     eval_bracket_short_open: ($) => /\[/,
     eval_bracket_short_close: ($) => /\]/,
+    eval_bracket_short_internal: ($) =>
+      repeat1(
+        choice(
+          $.escaped,
+          $._newline,
+          $.raw_scope_open,
+          $.raw_scope_close,
+          $.eval_bracket_open,
+          $.eval_bracket_close,
+          $.comment,
+          $.dash,
+          $.scope,
+          $._anything_else,
+        ),
+      ),
 
     eval_bracket: ($) =>
       seq(
@@ -69,6 +87,8 @@ export default grammar({
           $._newline,
           $.raw_scope_open,
           $.raw_scope_close,
+          $.eval_bracket_short_open,
+          $.eval_bracket_short_close,
           $.comment,
           $.dash,
           $.scope,
