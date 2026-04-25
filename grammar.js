@@ -12,6 +12,18 @@ export default grammar({
 
   extras: ($) => [],
 
+  // based on https://www.jonashietala.se/blog/2024/03/19/lets_create_a_tree-sitter_grammar/#External-scanner
+  // The principle is this: when the external scanner sees a raw_scope_open of a given depth or an eval_bracket of a given depth,
+  // subsequent checks for _contents or _close will only close on that same depth and no other.
+  externals: ($) => [
+    $.raw_scope_open,
+    $.raw_scope_contents,
+    $.raw_scope_close,
+    $.eval_bracket_open,
+    $.eval_bracket_contents,
+    $.eval_bracket_close,
+  ],
+
   rules: {
     source_file: ($) => repeat($._group),
 
@@ -21,68 +33,16 @@ export default grammar({
         $._newline,
         $.raw_scope,
         $.eval_bracket,
-        $.eval_bracket_short,
         $.comment,
         $.dash,
         $.scope,
         $._anything_else,
       ),
 
-    raw_scope: ($) =>
-      seq($.raw_scope_open, optional($.raw_scope_internal), $.raw_scope_close),
-    raw_scope_open: ($) => choice(/###\{/, /##\{/, /#\{/),
-    raw_scope_close: ($) => choice(/\}\#\#\#/, /\}\#\#/, /\}\#/),
-    raw_scope_internal: ($) =>
-      repeat1(
-        choice(
-          $.escaped,
-          $._newline,
-          "[",
-          "]",
-          choice(/---\]/, /--\]/, /-\]/),
-          choice(/\[---/, /\[--/, /\[-/),
-          $.comment,
-          $.dash,
-          "{",
-          "}",
-          $._anything_else,
-        ),
-      ),
-
-    eval_bracket_short: ($) =>
-      seq(
-        $.eval_bracket_short_open,
-        optional($.eval_bracket_short_internal),
-        $.eval_bracket_short_close,
-      ),
-    eval_bracket_short_open: ($) => /\[/,
-    eval_bracket_short_close: ($) => /\]/,
-    eval_bracket_short_internal: ($) => /[^\]]+/,
-
     eval_bracket: ($) =>
-      seq(
-        $.eval_bracket_open,
-        optional($.eval_bracket_internal),
-        $.eval_bracket_close,
-      ),
-    eval_bracket_open: ($) => choice(/\[---/, /\[--/, /\[-/),
-    eval_bracket_close: ($) => choice(/---\]/, /--\]/, /-\]/),
-    eval_bracket_internal: ($) =>
-      repeat1(
-        choice(
-          $.escaped,
-          $._newline,
-          choice(/###\{/, /##\{/, /#\{/),
-          choice(/\}\#\#\#/, /\}\#\#/, /\}\#/),
-          "[",
-          "]",
-          $.comment,
-          $.dash,
-          "{",
-          "}",
-          $._anything_else,
-        ),
-      ),
+      seq($.eval_bracket_open, $.eval_bracket_contents, $.eval_bracket_close),
+    raw_scope: ($) =>
+      seq($.raw_scope_open, $.raw_scope_contents, $.raw_scope_close),
 
     // TODO actual block-scope and inline-scope
     scope: ($) => seq("{", $._group, "}"),
