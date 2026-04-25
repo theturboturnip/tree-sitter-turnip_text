@@ -3,9 +3,10 @@
 #include <string.h>
 #include <stdio.h>
 
-#define xstr(s) str(s)
-#define str(s) #s
-#define assert(x) do { if (!(x)){fprintf(stderr, "Assertion error at file %s line %d: %s", __FILE__, __LINE__, xstr(x));} } while (0);
+// #define xstr(s) str(s)
+// #define str(s) #s
+// #define assert(x) do { if (!(x)){fprintf(stderr, "Assertion error at file %s line %d: %s", __FILE__, __LINE__, xstr(x));} } while (0);
+#define assert(x)
 
 enum TokenType {
   RAW_SCOPE_OPEN,
