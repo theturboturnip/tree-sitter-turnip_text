@@ -28,6 +28,8 @@ typedef struct Scanner {
     bool expecting_state_close;
 } Scanner;
 
+// TODO I've put very defensive  && !lexer->eof(lexer) in any loop on lookahead - is that necessary?
+
 void * tree_sitter_turnip_text_external_scanner_create() {
     Scanner *s = ts_calloc(1, sizeof(Scanner));
     return s;
@@ -48,12 +50,14 @@ void tree_sitter_turnip_text_external_scanner_deserialize(
   const char *buffer,
   unsigned length
 ) {
-    memcpy(payload, buffer, sizeof(Scanner));
+    if (length == sizeof(Scanner)) {
+        memcpy(payload, buffer, sizeof(Scanner));
+    }
 }
 
-bool parse_open_raw_scope(Scanner *s, TSLexer *lexer) {
+static bool parse_open_raw_scope(Scanner *s, TSLexer *lexer) {
     uint64_t hashes = 0;
-    while (lexer->lookahead == '#') {
+    while (lexer->lookahead == '#' && !lexer->eof(lexer)) {
         hashes++;
         lexer->advance(lexer, false);
     }
@@ -72,11 +76,11 @@ bool parse_open_raw_scope(Scanner *s, TSLexer *lexer) {
     }
 }
 
-void parse_raw_scope_contents(Scanner *s, TSLexer *lexer) {
+static void parse_raw_scope_contents(Scanner *s, TSLexer *lexer) {
     assert (s->state_depth > 0);
 
     while (1) {
-        while(lexer->lookahead != '}') {
+        while(lexer->lookahead != '}' && !lexer->eof(lexer)) {
             lexer->advance(lexer, false);
         }
         if (lexer->eof(lexer)) {
@@ -90,7 +94,7 @@ void parse_raw_scope_contents(Scanner *s, TSLexer *lexer) {
 
         uint64_t expected_hashes = s->state_depth;
         uint64_t hashes = 0;
-        while (lexer->lookahead == '#' && hashes < expected_hashes) {
+        while (lexer->lookahead == '#' && hashes < expected_hashes && !lexer->eof(lexer)) {
             hashes++;
             lexer->advance(lexer, false);
         }
@@ -112,12 +116,12 @@ void parse_raw_scope_contents(Scanner *s, TSLexer *lexer) {
     }
 }
 
-bool parse_close_raw_scope(Scanner *s, TSLexer *lexer) {
+static bool parse_close_raw_scope(Scanner *s, TSLexer *lexer) {
     if (lexer->lookahead == '}') {
         lexer->advance(lexer, false);
         uint64_t expected_hashes = s->state_depth;
         uint64_t hashes = 0;
-        while (lexer->lookahead == '#' && hashes < expected_hashes) {
+        while (lexer->lookahead == '#' && hashes < expected_hashes && !lexer->eof(lexer)) {
             hashes++;
             lexer->advance(lexer, false);
         }
@@ -137,11 +141,11 @@ bool parse_close_raw_scope(Scanner *s, TSLexer *lexer) {
     return false;
 }
 
-bool parse_open_eval_bracket(Scanner *s, TSLexer *lexer) {
+static bool parse_open_eval_bracket(Scanner *s, TSLexer *lexer) {
     if (lexer->lookahead == '[') {
         lexer->advance(lexer, false);
         uint64_t dashes = 0;
-        while (lexer->lookahead == '-') {
+        while (lexer->lookahead == '-' && !lexer->eof(lexer)) {
             dashes++;
             lexer->advance(lexer, false);
         }
@@ -159,10 +163,10 @@ bool parse_open_eval_bracket(Scanner *s, TSLexer *lexer) {
     return false;
 }
 
-void parse_eval_bracket_contents(Scanner *s, TSLexer *lexer) {
+static void parse_eval_bracket_contents(Scanner *s, TSLexer *lexer) {
     if (s->state_depth > 0) {
         while (1) {
-            while(lexer->lookahead != '-') {
+            while(lexer->lookahead != '-' && !lexer->eof(lexer)) {
                 lexer->advance(lexer, false);
             }
             if (lexer->eof(lexer)) {
@@ -173,7 +177,7 @@ void parse_eval_bracket_contents(Scanner *s, TSLexer *lexer) {
             lexer->mark_end(lexer);
             uint64_t expected_dashes = s->state_depth;
             uint64_t dashes = 0;
-            while (lexer->lookahead == '-' && dashes < expected_dashes) {
+            while (lexer->lookahead == '-' && dashes < expected_dashes && !lexer->eof(lexer)) {
                 dashes++;
                 lexer->advance(lexer, false);
             }
@@ -208,10 +212,10 @@ void parse_eval_bracket_contents(Scanner *s, TSLexer *lexer) {
     }
 }
 
-bool parse_close_eval_bracket(Scanner *s, TSLexer *lexer) {
+static bool parse_close_eval_bracket(Scanner *s, TSLexer *lexer) {
     uint64_t expected_dashes = s->state_depth;
     uint64_t dashes = 0;
-    while (lexer->lookahead == '-' && dashes < expected_dashes) {
+    while (lexer->lookahead == '-' && dashes < expected_dashes && !lexer->eof(lexer)) {
         dashes++;
         lexer->advance(lexer, false);
     }

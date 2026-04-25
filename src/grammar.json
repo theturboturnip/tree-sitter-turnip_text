@@ -22,6 +22,14 @@
         },
         {
           "type": "SYMBOL",
+          "name": "raw_scope"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "eval_bracket"
+        },
+        {
+          "type": "SYMBOL",
           "name": "comment"
         },
         {
