@@ -29,4 +29,8 @@ hello]
 
 ##{}#}##
 
+[identifier]
+
+[not identifier]
+
 if x:

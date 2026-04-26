@@ -22,6 +22,7 @@ export default grammar({
     $.eval_bracket_open,
     $.eval_bracket_contents,
     $.eval_bracket_close,
+    $.eval_bracket_identifier,
   ],
 
   rules: {
@@ -40,7 +41,11 @@ export default grammar({
       ),
 
     eval_bracket: ($) =>
-      seq($.eval_bracket_open, $.eval_bracket_contents, $.eval_bracket_close),
+      seq(
+        $.eval_bracket_open,
+        choice($.eval_bracket_contents, $.eval_bracket_identifier),
+        $.eval_bracket_close,
+      ),
     raw_scope: ($) =>
       seq($.raw_scope_open, $.raw_scope_contents, $.raw_scope_close),
 

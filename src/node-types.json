@@ -26,6 +26,10 @@
           "named": true
         },
         {
+          "type": "eval_bracket_identifier",
+          "named": true
+        },
+        {
           "type": "eval_bracket_open",
           "named": true
         }
@@ -140,6 +144,10 @@
   },
   {
     "type": "eval_bracket_contents",
+    "named": true
+  },
+  {
+    "type": "eval_bracket_identifier",
     "named": true
   },
   {

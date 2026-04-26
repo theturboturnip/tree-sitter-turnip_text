@@ -54,8 +54,17 @@
           "name": "eval_bracket_open"
         },
         {
-          "type": "SYMBOL",
-          "name": "eval_bracket_contents"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "eval_bracket_contents"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "eval_bracket_identifier"
+            }
+          ]
         },
         {
           "type": "SYMBOL",
@@ -208,6 +217,10 @@
     {
       "type": "SYMBOL",
       "name": "eval_bracket_close"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "eval_bracket_identifier"
     }
   ],
   "inline": [],

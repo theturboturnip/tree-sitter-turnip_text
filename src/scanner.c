@@ -1,5 +1,6 @@
 #include "tree_sitter/parser.h"
 #include "tree_sitter/alloc.h"
+#include <stdint.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -15,6 +16,7 @@ enum TokenType {
   EVAL_BRACKET_OPEN,
   EVAL_BRACKET_CONTENTS,
   EVAL_BRACKET_CLOSE,
+  EVAL_BRACKET_IDENTIFIER,
 };
 
 enum ScannerState {
@@ -164,10 +166,61 @@ static bool parse_open_eval_bracket(Scanner *s, TSLexer *lexer) {
     return false;
 }
 
+// Eval-brackets have a special case for identifier-only contents, trying to follow the official grammar:
+// https://docs.python.org/3/reference/lexical_analysis.html#names-identifiers-and-keywords
+/*
+ NAME:          name_start name_continue*
+ name_start:    "a"..."z" | "A"..."Z" | "_" | <non-ASCII character>
+ name_continue: name_start | "0"..."9"
+ identifier:    <NAME, except keywords>
+ */
+// ignoring keywords and non-ASCII characters
+
+typedef struct {
+    bool first_char;
+    bool cannot_be_identifier;
+} PythonIdentifierState;
+
+static void step_python_identifier_state(TSLexer *lexer, PythonIdentifierState* p) {
+    if (p->cannot_be_identifier) {
+        return;
+    }
+    int32_t c = lexer->lookahead;
+    if (p->first_char) {
+        if (
+            ('a' <= c && c <= 'z') ||
+            ('A' <= c && c <= 'Z') ||
+            ('_' == c) // TODO || non-ascii-character
+        ) {
+            // valid
+        } else {
+            p->cannot_be_identifier = true;
+        }
+
+        p->first_char = false;
+    } else {
+        if (
+            ('a' <= c && c <= 'z') ||
+            ('A' <= c && c <= 'Z') ||
+            ('0' <= c && c <= '9') ||
+            ('_' == c) // TODO || non-ascii-character
+        ) {
+            // valid
+        } else {
+            p->cannot_be_identifier = true;
+        }
+    }
+}
+
 static void parse_eval_bracket_contents(Scanner *s, TSLexer *lexer) {
+    PythonIdentifierState p = (PythonIdentifierState) {
+        .first_char = true,
+        .cannot_be_identifier = false,
+    };
     if (s->state_depth > 0) {
         while (1) {
             while(lexer->lookahead != '-' && !lexer->eof(lexer)) {
+                step_python_identifier_state(lexer, &p);
                 lexer->advance(lexer, false);
             }
             if (lexer->eof(lexer)) {
@@ -186,13 +239,14 @@ static void parse_eval_bracket_contents(Scanner *s, TSLexer *lexer) {
                 // We looked ahead to a true ender token
                 s->expecting_state_close = true;
                 // DO NOT MARK END, we have already tried
-                lexer->result_symbol = EVAL_BRACKET_CONTENTS;
+                lexer->result_symbol = (p.cannot_be_identifier) ? EVAL_BRACKET_CONTENTS : EVAL_BRACKET_IDENTIFIER;
                 return;
             }
             // The lookahead did not produce a correct ender
         }
     } else {
-        while (lexer->lookahead != ']') {
+        while (lexer->lookahead != ']' && !lexer->eof(lexer)) {
+            step_python_identifier_state(lexer, &p);
             lexer->advance(lexer, false);
         }
         if (lexer->eof(lexer)) {
@@ -201,13 +255,14 @@ static void parse_eval_bracket_contents(Scanner *s, TSLexer *lexer) {
         // Finish. We have not consumed the closer, but we know one is there.
         s->expecting_state_close = true;
         lexer->mark_end(lexer);
-        lexer->result_symbol = EVAL_BRACKET_CONTENTS;
+        lexer->result_symbol = (p.cannot_be_identifier) ? EVAL_BRACKET_CONTENTS : EVAL_BRACKET_IDENTIFIER;
         return;
     }
 
     eof: {
         s->expecting_state_close = false;
         lexer->mark_end(lexer);
+        // This is an error case, ignore the IDENTIFIER
         lexer->result_symbol = EVAL_BRACKET_CONTENTS;
         return;
     }
@@ -272,7 +327,7 @@ bool tree_sitter_turnip_text_external_scanner_scan(
     }
     case EVAL_BRACKET: {
         // Parse the entire eval-bracket-contents in one
-        if (valid_symbols[EVAL_BRACKET_CONTENTS]) {
+        if (valid_symbols[EVAL_BRACKET_CONTENTS] || valid_symbols[EVAL_BRACKET_IDENTIFIER]) {
             parse_eval_bracket_contents(s, lexer);
             return true; // There are always contents
         }
