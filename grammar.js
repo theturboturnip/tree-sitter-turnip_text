@@ -50,7 +50,9 @@ export default grammar({
       seq($.raw_scope_open, $.raw_scope_contents, $.raw_scope_close),
 
     // TODO actual block-scope and inline-scope
-    scope: ($) => seq("{", $._group, "}"),
+    scope: ($) => seq($.scope_open, $._group, $.scope_close),
+    scope_open: ($) => "{",
+    scope_close: ($) => "}",
 
     comment: ($) =>
       prec(-1, seq("#", optional(/[^\{\r\n][^\r\n]*/), $._newline)),

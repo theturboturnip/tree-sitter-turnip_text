@@ -93,18 +93,26 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "{"
+          "type": "SYMBOL",
+          "name": "scope_open"
         },
         {
           "type": "SYMBOL",
           "name": "_group"
         },
         {
-          "type": "STRING",
-          "value": "}"
+          "type": "SYMBOL",
+          "name": "scope_close"
         }
       ]
+    },
+    "scope_open": {
+      "type": "STRING",
+      "value": "{"
+    },
+    "scope_close": {
+      "type": "STRING",
+      "value": "}"
     },
     "comment": {
       "type": "PREC",

@@ -64,8 +64,8 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
-      "required": false,
+      "multiple": true,
+      "required": true,
       "types": [
         {
           "type": "comment",
@@ -89,6 +89,14 @@
         },
         {
           "type": "scope",
+          "named": true
+        },
+        {
+          "type": "scope_close",
+          "named": true
+        },
+        {
+          "type": "scope_open",
           "named": true
         }
       ]
@@ -167,11 +175,11 @@
     "named": true
   },
   {
-    "type": "{",
-    "named": false
+    "type": "scope_close",
+    "named": true
   },
   {
-    "type": "}",
-    "named": false
+    "type": "scope_open",
+    "named": true
   }
 ]
