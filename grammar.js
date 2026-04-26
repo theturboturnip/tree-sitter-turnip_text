@@ -36,33 +36,33 @@ export default grammar({
         $.eval_bracket,
         $.comment,
         $.dash,
+        $.endash,
+        $.emdash,
         $.scope,
+        $._whitespace,
         $._anything_else,
       ),
 
     eval_bracket: ($) =>
-      seq(
-        $.eval_bracket_open,
-        choice($.eval_bracket_contents, $.eval_bracket_identifier),
-        $.eval_bracket_close,
-      ),
-    raw_scope: ($) =>
-      seq($.raw_scope_open, $.raw_scope_contents, $.raw_scope_close),
+      seq($.eval_bracket_open, choice($.eval_bracket_contents, $.eval_bracket_identifier), $.eval_bracket_close),
+    raw_scope: ($) => seq($.raw_scope_open, $.raw_scope_contents, $.raw_scope_close),
 
     // TODO actual block-scope and inline-scope
-    scope: ($) => seq($.scope_open, $._group, $.scope_close),
+    scope: ($) => seq($.scope_open, repeat($._group), $.scope_close),
     scope_open: ($) => "{",
     scope_close: ($) => "}",
 
-    comment: ($) =>
-      prec(-1, seq("#", optional(/[^\{\r\n][^\r\n]*/), $._newline)),
+    comment: ($) => prec(-1, seq("#", optional(/[^\{\r\n][^\r\n]*/), $._newline)),
 
     escaped: ($) => token(seq("\\", /./)),
 
     _newline: ($) => choice(/\r\n/, /\r/, /\n/),
 
-    dash: ($) => choice(/-/, /--/, /---/),
+    dash: ($) => token(prec(1, /-/)),
+    endash: ($) => token(prec(2, /--/)),
+    emdash: ($) => token(prec(3, /---/)),
 
-    _anything_else: ($) => /[^\r\n\\\#\[\]\{\}\-]+/,
+    _whitespace: ($) => /\s+/,
+    _anything_else: ($) => /[^\r\n\\\#\[\]\{\}\-\s]+/,
   },
 });

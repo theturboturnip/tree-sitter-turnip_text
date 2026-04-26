@@ -38,7 +38,19 @@
         },
         {
           "type": "SYMBOL",
+          "name": "endash"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "emdash"
+        },
+        {
+          "type": "SYMBOL",
           "name": "scope"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_whitespace"
         },
         {
           "type": "SYMBOL",
@@ -97,8 +109,11 @@
           "name": "scope_open"
         },
         {
-          "type": "SYMBOL",
-          "name": "_group"
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_group"
+          }
         },
         {
           "type": "SYMBOL",
@@ -177,25 +192,45 @@
       ]
     },
     "dash": {
-      "type": "CHOICE",
-      "members": [
-        {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
           "type": "PATTERN",
           "value": "-"
-        },
-        {
+        }
+      }
+    },
+    "endash": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
           "type": "PATTERN",
           "value": "--"
-        },
-        {
+        }
+      }
+    },
+    "emdash": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 3,
+        "content": {
           "type": "PATTERN",
           "value": "---"
         }
-      ]
+      }
+    },
+    "_whitespace": {
+      "type": "PATTERN",
+      "value": "\\s+"
     },
     "_anything_else": {
       "type": "PATTERN",
-      "value": "[^\\r\\n\\\\\\#\\[\\]\\{\\}\\-]+"
+      "value": "[^\\r\\n\\\\\\#\\[\\]\\{\\}\\-\\s]+"
     }
   },
   "extras": [],

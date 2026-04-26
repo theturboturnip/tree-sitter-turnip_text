@@ -34,3 +34,5 @@ hello]
 [not identifier]
 
 if x:
+
+{ --- }

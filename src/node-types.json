@@ -5,11 +5,6 @@
     "fields": {}
   },
   {
-    "type": "dash",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "eval_bracket",
     "named": true,
     "fields": {},
@@ -76,6 +71,14 @@
           "named": true
         },
         {
+          "type": "emdash",
+          "named": true
+        },
+        {
+          "type": "endash",
+          "named": true
+        },
+        {
           "type": "escaped",
           "named": true
         },
@@ -120,6 +123,14 @@
           "named": true
         },
         {
+          "type": "emdash",
+          "named": true
+        },
+        {
+          "type": "endash",
+          "named": true
+        },
+        {
           "type": "escaped",
           "named": true
         },
@@ -141,6 +152,18 @@
   {
     "type": "#",
     "named": false
+  },
+  {
+    "type": "dash",
+    "named": true
+  },
+  {
+    "type": "emdash",
+    "named": true
+  },
+  {
+    "type": "endash",
+    "named": true
   },
   {
     "type": "escaped",
