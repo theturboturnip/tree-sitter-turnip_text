@@ -36,3 +36,6 @@ hello]
 if x:
 
 { --- }
+
+
+#[ this should be a comment

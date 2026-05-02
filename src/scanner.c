@@ -298,10 +298,14 @@ bool tree_sitter_turnip_text_external_scanner_scan(
 
     switch (s->state) {
     case NORMAL: {
-        if (valid_symbols[RAW_SCOPE_OPEN] && parse_open_raw_scope(s, lexer)) {
-            return true;
-        } else if (valid_symbols[EVAL_BRACKET_OPEN] && parse_open_eval_bracket(s, lexer)) {
-            return true;
+        // parse_open_raw_scope and parse_open_eval_bracket leave residual state in the parser on failure.
+        // Before, I did if (valid_symbols[X] && parse_X) else if (valid_symbols[Y] && parse_Y), but if parse_X
+        // failed and left incomplete state it would be continued in parse_Y.
+        // Instead, take advantage of the two tokens being disjoint to only ever try to parse one of them.
+        if (valid_symbols[RAW_SCOPE_OPEN] && lexer->lookahead == '#') {
+            return parse_open_raw_scope(s, lexer);
+        } else if (valid_symbols[EVAL_BRACKET_OPEN] && lexer->lookahead == '[') {
+            return parse_open_eval_bracket(s, lexer);
         } else {
             return false;
         }

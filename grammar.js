@@ -52,7 +52,7 @@ export default grammar({
     scope_open: ($) => "{",
     scope_close: ($) => "}",
 
-    comment: ($) => prec(-1, seq("#", optional(/[^\{\r\n][^\r\n]*/), $._newline)),
+    comment: ($) => seq("#", optional(/[^\{\r\n][^\r\n]*/), $._newline),
 
     escaped: ($) => token(seq("\\", /./)),
 
